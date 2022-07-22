@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RandomUsersApi</string>
+
+    <string name="user_image">User image</string>
+    <string name="user_first_name">First name: %s</string>
+    <string name="user_gender">Gender: %s</string>
+    <string name="user_age">Age: %s years</string>
+    <string name="user_email">Email: %s</string>
+</resources>
