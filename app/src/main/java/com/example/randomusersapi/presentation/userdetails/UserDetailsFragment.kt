@@ -10,13 +10,21 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
+import com.example.randomusersapi.presentation.ViewModelFactory
 
 class UserDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentUserDetailsBinding
 
     private val viewModel by lazy {
-        ViewModelProvider(this)[UserDetailsViewModel::class.java]
+        val viewModelFactory = ViewModelFactory(activity?.application!!)
+        ViewModelProvider(this, viewModelFactory)[UserDetailsViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val userUuid = arguments?.getString(USER_UUID)!!
+        viewModel.getUserByUuid(userUuid)
     }
 
     override fun onCreateView(
@@ -30,21 +38,21 @@ class UserDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView(view)
+        setupUserObserver(view)
     }
 
-    private fun initView(view: View) {
-        val user = viewModel.getUserByUuid(arguments?.getString(USER_UUID)!!)
-
-        with(binding) {
-            Glide
-                .with(view)
-                .load(user.imageUrl)
-                .into(binding.userImage)
-            userFirstName.text = getString(R.string.user_first_name, user.firstName)
-            userGender.text = getString(R.string.user_gender, user.gender)
-            userAge.text = getString(R.string.user_age, user.age.toString())
-            userEmail.text = getString(R.string.user_email, user.email)
+    private fun setupUserObserver(view: View) {
+        viewModel.userInfo.observe(viewLifecycleOwner) {
+            with(binding) {
+                Glide
+                    .with(view)
+                    .load(it.imageUrl)
+                    .into(binding.userImage)
+                userFirstName.text = getString(R.string.user_first_name, it.firstName)
+                userGender.text = getString(R.string.user_gender, it.gender)
+                userAge.text = getString(R.string.user_age, it.age.toString())
+                userEmail.text = getString(R.string.user_email, it.email)
+            }
         }
     }
 

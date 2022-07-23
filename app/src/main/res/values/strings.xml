@@ -6,4 +6,6 @@
     <string name="user_gender">Gender: %s</string>
     <string name="user_age">Age: %s years</string>
     <string name="user_email">Email: %s</string>
+    <string name="try_again">Try again</string>
+    <string name="error_loading">Error loading</string>
 </resources>
