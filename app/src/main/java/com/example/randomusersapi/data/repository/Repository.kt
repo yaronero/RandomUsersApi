@@ -4,13 +4,6 @@ import com.example.randomusersapi.data.UserMapper
 import com.example.randomusersapi.data.api.ApiService
 import com.example.randomusersapi.data.db.UserDao
 import com.example.randomusersapi.domain.User
-import com.example.randomusersapi.data.api.model.DataResult
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class Repository(
     private val userDao: UserDao,
@@ -18,35 +11,27 @@ class Repository(
     private val mapper: UserMapper = UserMapper()
 ) {
 
-    fun loadUserData(onUserReceived: (List<User>) -> Unit) {
-        val callback = apiService.getData()
+    suspend fun loadUserData(): List<User> {
+        val response = apiService.getData()
 
-        callback.enqueue(object : Callback<DataResult> {
-            override fun onResponse(call: Call<DataResult>, response: Response<DataResult>) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    userDao.deleteAllUsers()
-                    val list = response.body()?.results?.map {
-                        mapper.mapDataUserToDbModel(it)
-                    } ?: emptyList()
-                    userDao.insertAll(list)
-                    onUserReceived(mapper.mapDbModelListToEntityList(userDao.getAllUsers()))
-                }
-            }
-
-            override fun onFailure(call: Call<DataResult>, t: Throwable) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    onError(onUserReceived)
-                }
-            }
-        })
+        return if (response.isSuccessful) {
+            userDao.deleteAllUsers()
+            val list = response.body()?.results?.map {
+                mapper.mapDataUserToDbModel(it)
+            } ?: emptyList()
+            userDao.insertAll(list)
+            mapper.mapDbModelListToEntityList(userDao.getAllUsers())
+        } else {
+            onError()
+        }
     }
 
-    private suspend fun onError(onUserReceived: (List<User>) -> Unit) {
+    private suspend fun onError(): List<User> {
         val list = mapper.mapDbModelListToEntityList(userDao.getAllUsers())
-        if (list.isEmpty()) {
-            onUserReceived(emptyList())
+        return if (list.isEmpty()) {
+            emptyList()
         } else {
-            onUserReceived(mapper.mapDbModelListToEntityList(userDao.getAllUsers()))
+            mapper.mapDbModelListToEntityList(userDao.getAllUsers())
         }
     }
 

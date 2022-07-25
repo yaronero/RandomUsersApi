@@ -1,12 +1,12 @@
 package com.example.randomusersapi.data.api
 
 import com.example.randomusersapi.data.api.model.DataResult
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 
 interface ApiService {
     @GET("api/?page=$PAGE&results=$LIMIT&seed=$SEED")
-    fun getData(): Call<DataResult>
+    suspend fun getData(): Response<DataResult>
 
     companion object {
         const val PAGE = 1

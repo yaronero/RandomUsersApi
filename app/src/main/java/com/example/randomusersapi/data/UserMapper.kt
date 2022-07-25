@@ -1,8 +1,8 @@
 package com.example.randomusersapi.data
 
+import com.example.randomusersapi.data.api.model.DataUser
 import com.example.randomusersapi.data.db.UserModelDb
 import com.example.randomusersapi.domain.User
-import com.example.randomusersapi.data.api.model.DataUser
 
 class UserMapper {
 

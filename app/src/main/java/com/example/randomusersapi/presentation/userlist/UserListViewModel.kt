@@ -24,16 +24,13 @@ class UserListViewModel(
 
     fun getUserList() {
         viewModelScope.launch {
-            repository.loadUserData(::uploadUserList)
-        }
-    }
-
-    private fun uploadUserList(list: List<User>) {
-        if (list.isNotEmpty()) {
-            _userList.postValue(list)
-            _errorLoading.postValue(false)
-        } else {
-            _errorLoading.postValue(true)
+            val userList = repository.loadUserData()
+            if (userList.isNotEmpty()) {
+                _userList.postValue(userList)
+                _errorLoading.postValue(false)
+            } else {
+                _errorLoading.postValue(true)
+            }
         }
     }
 }
