@@ -23,6 +23,8 @@ class UserDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        retainInstance = true
+
         val userUuid = arguments?.getString(USER_UUID)!!
         viewModel.getUserByUuid(userUuid)
     }
@@ -54,6 +56,11 @@ class UserDetailsFragment : Fragment() {
                 userEmail.text = getString(R.string.user_email, it.email)
             }
         }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(USER_UUID, arguments?.getString(USER_UUID)!!)
     }
 
     companion object {

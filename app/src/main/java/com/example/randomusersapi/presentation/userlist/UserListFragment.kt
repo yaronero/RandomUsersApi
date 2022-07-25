@@ -26,16 +26,12 @@ class UserListFragment : Fragment() {
         UserListAdapter(::onItemClickListener)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.getUserList()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        retainInstance = true
         binding = FragmentUserListBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -44,6 +40,9 @@ class UserListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.progressBar.visibility = View.VISIBLE
 
+        if (viewModel.userList.value == null) {
+            viewModel.getUserList()
+        }
         setupAdapter()
         setupObserves()
     }
@@ -83,7 +82,6 @@ class UserListFragment : Fragment() {
         parentFragmentManager
             .beginTransaction()
             .replace(R.id.container, UserDetailsFragment.newInstance(user.uuid))
-            .addToBackStack(null)
             .commit()
     }
 }
