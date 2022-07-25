@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.room.Room
 import com.example.randomusersapi.R
+import com.example.randomusersapi.data.api.ApiService
+import com.example.randomusersapi.data.api.RetrofitInstance
 import com.example.randomusersapi.data.db.UsersDatabase
 import com.example.randomusersapi.data.repository.Repository
 import com.example.randomusersapi.databinding.FragmentUserListBinding
@@ -22,14 +24,16 @@ class UserListFragment : Fragment() {
     private lateinit var binding: FragmentUserListBinding
 
     private val viewModel by lazy {
-        val userDao by lazy {
-            Room.databaseBuilder(
-                activity?.application!!,
-                UsersDatabase::class.java, Repository.DATABASE_NAME
-            ).build().userDao()
-        }
+        val userDao = Room.databaseBuilder(
+            activity?.application!!,
+            UsersDatabase::class.java, Repository.DATABASE_NAME
+        ).build().userDao()
 
-        val viewModelFactory = ViewModelFactory(userDao)
+        val apiService = RetrofitInstance.getInstance().create(ApiService::class.java)
+
+        val repository = Repository(userDao, apiService)
+
+        val viewModelFactory = ViewModelFactory(repository)
         ViewModelProvider(this, viewModelFactory)[UserListViewModel::class.java]
     }
 
