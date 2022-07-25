@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
+import com.example.randomusersapi.data.db.UsersDatabase
+import com.example.randomusersapi.data.repository.Repository
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
 import com.example.randomusersapi.presentation.ViewModelFactory
 
@@ -17,16 +20,15 @@ class UserDetailsFragment : Fragment() {
     private lateinit var binding: FragmentUserDetailsBinding
 
     private val viewModel by lazy {
-        val viewModelFactory = ViewModelFactory(activity?.application!!)
+        val userDao by lazy {
+            Room.databaseBuilder(
+                activity?.application!!,
+                UsersDatabase::class.java, Repository.DATABASE_NAME
+            ).build().userDao()
+        }
+
+        val viewModelFactory = ViewModelFactory(userDao)
         ViewModelProvider(this, viewModelFactory)[UserDetailsViewModel::class.java]
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
-
-        val userUuid = arguments?.getString(USER_UUID)!!
-        viewModel.getUserByUuid(userUuid)
     }
 
     override fun onCreateView(
@@ -34,12 +36,15 @@ class UserDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        retainInstance = true
         binding = FragmentUserDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val userUuid = arguments?.getString(USER_UUID)!!
+        viewModel.getUserByUuid(userUuid)
         setupUserObserver(view)
     }
 
@@ -56,11 +61,6 @@ class UserDetailsFragment : Fragment() {
                 userEmail.text = getString(R.string.user_email, it.email)
             }
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(USER_UUID, arguments?.getString(USER_UUID)!!)
     }
 
     companion object {

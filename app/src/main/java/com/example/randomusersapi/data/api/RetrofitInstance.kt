@@ -6,12 +6,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitInstance {
     private var retrofit: Retrofit? = null
 
-    private const val baseUrl = "https://randomuser.me/"
+    private const val BASE_URL = "https://randomuser.me/"
 
     fun getInstance(): Retrofit {
         if (retrofit == null) {
             retrofit = Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         }

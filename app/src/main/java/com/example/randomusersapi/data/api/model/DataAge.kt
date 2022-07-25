@@ -1,4 +1,4 @@
-package com.example.randomusersapi.domain.apimodels
+package com.example.randomusersapi.data.api.model
 
 import com.google.gson.annotations.SerializedName
 

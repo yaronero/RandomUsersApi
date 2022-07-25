@@ -1,19 +1,18 @@
 package com.example.randomusersapi.presentation.userdetails
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.randomusersapi.data.repository.Repository
+import com.example.randomusersapi.base.BaseViewModel
+import com.example.randomusersapi.data.db.UserDao
 import com.example.randomusersapi.domain.User
 import kotlinx.coroutines.launch
 
 class UserDetailsViewModel(
-    application: Application
-) : ViewModel() {
-
-    private val repository = Repository(application)
+    userDao: UserDao
+) : BaseViewModel(
+    userDao = userDao
+) {
 
     private val _userInfo = MutableLiveData<User>()
     val userInfo: LiveData<User>

@@ -1,6 +1,6 @@
 package com.example.randomusersapi.data.api
 
-import com.example.randomusersapi.domain.apimodels.DataResult
+import com.example.randomusersapi.data.api.model.DataResult
 import retrofit2.Call
 import retrofit2.http.GET
 

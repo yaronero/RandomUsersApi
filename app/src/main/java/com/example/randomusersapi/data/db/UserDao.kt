@@ -14,7 +14,7 @@ interface UserDao {
     suspend fun getUserByUuid(userUuid: String): UserModelDb
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(users: UserModelDb)
+    fun insertAll(usersList: List<UserModelDb>)
 
     @Query("DELETE FROM users")
     fun deleteAllUsers()

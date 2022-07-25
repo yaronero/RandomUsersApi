@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.room.Room
 import com.example.randomusersapi.R
+import com.example.randomusersapi.data.db.UsersDatabase
+import com.example.randomusersapi.data.repository.Repository
 import com.example.randomusersapi.databinding.FragmentUserListBinding
 import com.example.randomusersapi.domain.User
 import com.example.randomusersapi.presentation.ViewModelFactory
@@ -18,7 +22,14 @@ class UserListFragment : Fragment() {
     private lateinit var binding: FragmentUserListBinding
 
     private val viewModel by lazy {
-        val viewModelFactory = ViewModelFactory(activity?.application!!)
+        val userDao by lazy {
+            Room.databaseBuilder(
+                activity?.application!!,
+                UsersDatabase::class.java, Repository.DATABASE_NAME
+            ).build().userDao()
+        }
+
+        val viewModelFactory = ViewModelFactory(userDao)
         ViewModelProvider(this, viewModelFactory)[UserListViewModel::class.java]
     }
 
@@ -59,20 +70,20 @@ class UserListFragment : Fragment() {
         viewModel.errorLoading.observe(viewLifecycleOwner) {
             with(binding) {
                 if (it) {
-                    progressBar.visibility = View.GONE
-                    tvErrorLoading.visibility = View.VISIBLE
-                    btnTryAgain.visibility = View.VISIBLE
+                    progressBar.isVisible = false
+                    tvErrorLoading.isVisible = true
+                    btnTryAgain.isVisible = true
 
                     btnTryAgain.setOnClickListener {
-                        progressBar.visibility = View.VISIBLE
-                        tvErrorLoading.visibility = View.GONE
-                        btnTryAgain.visibility = View.GONE
+                        progressBar.isVisible = true
+                        tvErrorLoading.isVisible = false
+                        btnTryAgain.isVisible = false
                         viewModel.getUserList()
                     }
                 } else {
-                    progressBar.visibility = View.GONE
-                    tvErrorLoading.visibility = View.GONE
-                    btnTryAgain.visibility = View.GONE
+                    progressBar.isVisible = false
+                    tvErrorLoading.isVisible = false
+                    btnTryAgain.isVisible = false
                 }
             }
         }
@@ -82,6 +93,7 @@ class UserListFragment : Fragment() {
         parentFragmentManager
             .beginTransaction()
             .replace(R.id.container, UserDetailsFragment.newInstance(user.uuid))
+            .addToBackStack(null)
             .commit()
     }
 }
