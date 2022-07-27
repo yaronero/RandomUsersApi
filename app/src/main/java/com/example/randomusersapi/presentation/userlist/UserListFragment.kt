@@ -38,7 +38,7 @@ class UserListFragment : Fragment() {
     }
 
     private val adapter by lazy {
-        UserListAdapter(::onItemClickListener)
+        UserListAdapter(::onItemClickListener, ::loadUserData)
     }
 
     override fun onCreateView(
@@ -53,13 +53,18 @@ class UserListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.progressBar.visibility = View.VISIBLE
+        binding.loadProgress.isVisible = true
 
         if (viewModel.userList.value == null) {
             viewModel.getUserList()
         }
         setupAdapter()
         setupObserves()
+    }
+
+    private fun loadUserData() {
+        viewModel.getUserList()
+        binding.loadProgress.isVisible = true
     }
 
     private fun setupAdapter() {
@@ -69,23 +74,24 @@ class UserListFragment : Fragment() {
     private fun setupObserves() {
         viewModel.userList.observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            binding.loadProgress.isVisible = false
         }
 
         viewModel.errorLoading.observe(viewLifecycleOwner) {
             with(binding) {
                 if (it) {
-                    progressBar.isVisible = false
+                    loadProgress.isVisible = false
                     tvErrorLoading.isVisible = true
                     btnTryAgain.isVisible = true
 
                     btnTryAgain.setOnClickListener {
-                        progressBar.isVisible = true
+                        loadProgress.isVisible = true
                         tvErrorLoading.isVisible = false
                         btnTryAgain.isVisible = false
                         viewModel.getUserList()
                     }
                 } else {
-                    progressBar.isVisible = false
+                    loadProgress.isVisible = false
                     tvErrorLoading.isVisible = false
                     btnTryAgain.isVisible = false
                 }

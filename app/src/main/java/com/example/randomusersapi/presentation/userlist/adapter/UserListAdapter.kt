@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.randomusersapi.databinding.UserListItemBinding
 import com.example.randomusersapi.domain.User
 
+private const val PREFETCH_DISTANCE = 5
+
 class UserListAdapter(
-    private val onItemClickListener: (User) -> Unit
+    private val onItemClickListener: (User) -> Unit,
+    private val loadNextPage: () -> Unit
 ) : ListAdapter<User, UserListViewHolder>(UserDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder {
@@ -21,5 +24,8 @@ class UserListAdapter(
 
     override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {
         holder.bind(currentList[position])
+        if(position == currentList.size - PREFETCH_DISTANCE){
+            loadNextPage()
+        }
     }
 }

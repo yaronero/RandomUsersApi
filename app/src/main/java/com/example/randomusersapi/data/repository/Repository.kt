@@ -11,27 +11,37 @@ class Repository(
     private val mapper: UserMapper = UserMapper()
 ) {
 
-    suspend fun loadUserData(): List<User> {
-        val response = apiService.getData()
+    private var isFirstLoad = true
+    private var pageIndex = 1
 
-        return if (response.isSuccessful) {
-            userDao.deleteAllUsers()
-            val list = response.body()?.results?.map {
-                mapper.mapDataUserToDbModel(it)
-            } ?: emptyList()
-            userDao.insertAll(list)
-            mapper.mapDbModelListToEntityList(userDao.getAllUsers())
-        } else {
-            onError()
+    suspend fun loadUserData(): List<User> {
+        try {
+            val response = apiService.getData(pageIndex)
+
+            return if (response.isSuccessful) {
+                if (isFirstLoad) {
+                    isFirstLoad = false
+                    userDao.deleteAllUsers()
+                }
+                val list = response.body()?.results?.map {
+                    mapper.mapDataUserToDbModel(it)
+                } ?: emptyList()
+                userDao.insertAll(list)
+                mapper.mapDbModelListToEntityList(userDao.getRangeOfUsers(pageIndex++ - 1))
+            } else {
+                onError()
+            }
+        } catch (e: Exception) {
+            return onError()
         }
     }
 
     private suspend fun onError(): List<User> {
-        val list = mapper.mapDbModelListToEntityList(userDao.getAllUsers())
-        return if (list.isEmpty()) {
+        val list =
+            mapper.mapDbModelListToEntityList(userDao.getRangeOfUsers(pageIndex++ - 1))
+        return list.ifEmpty {
+            pageIndex--
             emptyList()
-        } else {
-            mapper.mapDbModelListToEntityList(userDao.getAllUsers())
         }
     }
 

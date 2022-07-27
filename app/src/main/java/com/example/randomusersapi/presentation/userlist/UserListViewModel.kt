@@ -22,9 +22,10 @@ class UserListViewModel(
 
     fun getUserList() {
         viewModelScope.launch {
-            val userList = repository.loadUserData()
-            if (userList.isNotEmpty()) {
-                _userList.postValue(userList)
+            val loadedUserList = repository.loadUserData()
+            if (loadedUserList.isNotEmpty()) {
+                val currentList = userList.value ?: emptyList()
+                _userList.postValue(currentList + loadedUserList)
                 _errorLoading.postValue(false)
             } else {
                 _errorLoading.postValue(true)
