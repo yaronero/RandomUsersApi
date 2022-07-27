@@ -12,11 +12,11 @@ class Repository(
 ) {
 
     private var isFirstLoad = true
-    private var pageIndex = 1
+    private var pageIndex = 0
 
     suspend fun loadUserData(): List<User> {
         try {
-            val response = apiService.getData(pageIndex)
+            val response = apiService.getData()
 
             return if (response.isSuccessful) {
                 if (isFirstLoad) {
@@ -27,7 +27,7 @@ class Repository(
                     mapper.mapDataUserToDbModel(it)
                 } ?: emptyList()
                 userDao.insertAll(list)
-                mapper.mapDbModelListToEntityList(userDao.getRangeOfUsers(pageIndex++ - 1))
+                mapper.mapDbModelListToEntityList(userDao.getRangeOfUsers(pageIndex++))
             } else {
                 onError()
             }
@@ -38,9 +38,8 @@ class Repository(
 
     private suspend fun onError(): List<User> {
         val list =
-            mapper.mapDbModelListToEntityList(userDao.getRangeOfUsers(pageIndex++ - 1))
+            mapper.mapDbModelListToEntityList(userDao.getRangeOfUsers(pageIndex++))
         return list.ifEmpty {
-            pageIndex--
             emptyList()
         }
     }
