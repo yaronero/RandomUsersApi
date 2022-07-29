@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
 import com.example.randomusersapi.data.api.ApiService
 import com.example.randomusersapi.data.api.RetrofitInstance
-import com.example.randomusersapi.data.db.UsersDatabase
+import com.example.randomusersapi.data.db.DatabaseInstance
+import com.example.randomusersapi.data.repository.ApiRepository
+import com.example.randomusersapi.data.repository.DBRepository
 import com.example.randomusersapi.data.repository.Repository
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
 import com.example.randomusersapi.presentation.ViewModelFactory
@@ -22,14 +23,13 @@ class UserDetailsFragment : Fragment() {
     private lateinit var binding: FragmentUserDetailsBinding
 
     private val viewModel by lazy {
-        val userDao = Room.databaseBuilder(
-            activity?.application!!,
-            UsersDatabase::class.java, Repository.DATABASE_NAME
-        ).build().userDao()
+        val userDao = DatabaseInstance.getInstance(activity?.application!!).userDao()
+        val dbRepository = DBRepository(userDao)
 
         val apiService = RetrofitInstance.getInstance().create(ApiService::class.java)
+        val apiRepository = ApiRepository(apiService)
 
-        val repository = Repository(userDao, apiService)
+        val repository = Repository(apiRepository, dbRepository)
 
         val viewModelFactory = ViewModelFactory(repository)
         ViewModelProvider(this, viewModelFactory)[UserDetailsViewModel::class.java]

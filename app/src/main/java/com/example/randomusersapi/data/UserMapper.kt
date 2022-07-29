@@ -31,4 +31,19 @@ class UserMapper {
             email = dataUser.email
         )
     }
+
+    fun mapEntityToDbModel(userModelDb: User): UserModelDb {
+        return UserModelDb(
+            uuid = userModelDb.uuid,
+            imageUrl = userModelDb.imageUrl,
+            firstName = userModelDb.firstName,
+            gender = userModelDb.gender,
+            age = userModelDb.age,
+            email = userModelDb.email
+        )
+    }
+
+    fun mapEntityListToDbModelList(userModelDbList: List<User>) = userModelDbList.map {
+        mapEntityToDbModel(it)
+    }
 }
