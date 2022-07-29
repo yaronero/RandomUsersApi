@@ -10,14 +10,13 @@ class ApiRepository(
     private val mapper: UserMapper = UserMapper()
 ) {
 
-    suspend fun uploadUserData(): List<User> {
+    suspend fun loadUserData(): List<User> {
         val response = apiService.getData()
 
         return if (response.isSuccessful) {
-            val list = response.body()?.results?.map {
-                mapper.mapDataUserToDbModel(it)
+            response.body()?.results?.map {
+                mapper.mapDataUserToEntity(it)
             } ?: emptyList()
-            mapper.mapDbModelListToEntityList(list)
         } else {
             throw HttpException(response)
         }

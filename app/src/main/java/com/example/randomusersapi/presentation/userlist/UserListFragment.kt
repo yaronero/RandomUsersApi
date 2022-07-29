@@ -9,8 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.randomusersapi.R
 import com.example.randomusersapi.data.api.ApiService
-import com.example.randomusersapi.data.api.RetrofitInstance
-import com.example.randomusersapi.data.db.DatabaseInstance
+import com.example.randomusersapi.data.db.UsersDatabase
 import com.example.randomusersapi.data.repository.ApiRepository
 import com.example.randomusersapi.data.repository.DBRepository
 import com.example.randomusersapi.data.repository.Repository
@@ -25,10 +24,10 @@ class UserListFragment : Fragment() {
     private lateinit var binding: FragmentUserListBinding
 
     private val viewModel by lazy {
-        val userDao = DatabaseInstance.getInstance(activity?.application!!).userDao()
+        val userDao = UsersDatabase.getInstance(activity?.application!!).userDao()
         val dbRepository = DBRepository(userDao)
 
-        val apiService = RetrofitInstance.getInstance().create(ApiService::class.java)
+        val apiService = ApiService.getInstance()
         val apiRepository = ApiRepository(apiService)
 
         val repository = Repository(apiRepository, dbRepository)

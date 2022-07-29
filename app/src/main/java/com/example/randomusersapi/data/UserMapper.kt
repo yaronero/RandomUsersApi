@@ -21,8 +21,8 @@ class UserMapper {
         mapDbModelToEntity(it)
     }
 
-    fun mapDataUserToDbModel(dataUser: DataUser): UserModelDb {
-        return UserModelDb(
+    fun mapDataUserToEntity(dataUser: DataUser): User {
+        return User(
             uuid = dataUser.login.uuid,
             imageUrl = dataUser.image.imageUrl,
             firstName = dataUser.name.firstName,

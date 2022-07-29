@@ -8,11 +8,10 @@ class Repository(
 ) {
 
     private var isFirstLoad = true
-    private var pageIndex = 0
 
-    suspend fun loadUserData(): List<User> {
+    suspend fun loadUserData(pageIndex: Int): List<User> {
         return try {
-            val userList = apiRepository.uploadUserData()
+            val userList = apiRepository.loadUserData()
 
             if (isFirstLoad) {
                 isFirstLoad = false
@@ -21,14 +20,14 @@ class Repository(
 
             dbRepository.insertAllUsers(userList)
 
-            dbRepository.getRangeOfUsers(pageIndex++)
+            userList
         } catch (e: Exception) {
-            onError()
+            onError(pageIndex)
         }
     }
 
-    private suspend fun onError(): List<User> {
-        val list = dbRepository.getRangeOfUsers(pageIndex++)
+    private suspend fun onError(pageIndex: Int): List<User> {
+        val list = dbRepository.getRangeOfUsers(pageIndex + 1)
         return list.ifEmpty {
             emptyList()
         }
@@ -36,9 +35,5 @@ class Repository(
 
     suspend fun getUserByUuid(uuid: String): User {
         return dbRepository.getUserByUuid(uuid)
-    }
-
-    companion object {
-        const val DATABASE_NAME = "UsersDb"
     }
 }

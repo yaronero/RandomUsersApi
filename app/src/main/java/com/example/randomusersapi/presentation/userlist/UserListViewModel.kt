@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.randomusersapi.data.repository.Repository
 import com.example.randomusersapi.domain.User
+import com.example.randomusersapi.utils.LOAD_AMOUNT
 import kotlinx.coroutines.launch
 
 class UserListViewModel(
@@ -22,7 +23,9 @@ class UserListViewModel(
 
     fun getUserList() {
         viewModelScope.launch {
-            val loadedUserList = repository.loadUserData()
+            val loadedUserList = repository.loadUserData(
+                _userList.value?.size?.div(LOAD_AMOUNT) ?: 0
+            )
             if (loadedUserList.isNotEmpty()) {
                 val currentList = userList.value ?: emptyList()
                 _userList.postValue(currentList + loadedUserList)

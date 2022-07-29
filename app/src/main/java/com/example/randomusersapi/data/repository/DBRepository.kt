@@ -17,10 +17,6 @@ class DBRepository(
         userDao.deleteAllUsers()
     }
 
-    suspend fun getAllUsers(): List<User> {
-        return mapper.mapDbModelListToEntityList(userDao.getAllUsers())
-    }
-
     suspend fun getUserByUuid(uuid: String): User {
         return mapper.mapDbModelToEntity(userDao.getUserByUuid(uuid))
     }
