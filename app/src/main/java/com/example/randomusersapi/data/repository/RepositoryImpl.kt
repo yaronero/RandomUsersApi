@@ -1,15 +1,18 @@
 package com.example.randomusersapi.data.repository
 
+import com.example.randomusersapi.domain.ApiRepository
+import com.example.randomusersapi.domain.DBRepository
+import com.example.randomusersapi.domain.Repository
 import com.example.randomusersapi.domain.User
 
-class Repository(
+class RepositoryImpl(
     private val apiRepository: ApiRepository,
     private val dbRepository: DBRepository,
-) {
+) : Repository {
 
     private var isFirstLoad = true
 
-    suspend fun loadUserData(pageIndex: Int): List<User> {
+    override suspend fun loadUserData(pageIndex: Int): List<User> {
         return try {
             val userList = apiRepository.loadUserData()
 
@@ -33,7 +36,7 @@ class Repository(
         }
     }
 
-    suspend fun getUserByUuid(uuid: String): User {
+    override suspend fun getUserByUuid(uuid: String): User {
         return dbRepository.getUserByUuid(uuid)
     }
 }

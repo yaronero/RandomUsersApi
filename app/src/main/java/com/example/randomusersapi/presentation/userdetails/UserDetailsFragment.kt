@@ -11,9 +11,9 @@ import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
 import com.example.randomusersapi.data.api.ApiService
 import com.example.randomusersapi.data.db.UsersDatabase
-import com.example.randomusersapi.data.repository.ApiRepository
-import com.example.randomusersapi.data.repository.DBRepository
-import com.example.randomusersapi.data.repository.Repository
+import com.example.randomusersapi.data.repository.ApiRepositoryImpl
+import com.example.randomusersapi.data.repository.DBRepositoryImpl
+import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
 import com.example.randomusersapi.presentation.ViewModelFactory
 
@@ -23,14 +23,14 @@ class UserDetailsFragment : Fragment() {
 
     private val viewModel by lazy {
         val userDao = UsersDatabase.getInstance(activity?.application!!).userDao()
-        val dbRepository = DBRepository(userDao)
+        val dbRepository = DBRepositoryImpl(userDao)
 
         val apiService = ApiService.getInstance()
-        val apiRepository = ApiRepository(apiService)
+        val apiRepository = ApiRepositoryImpl(apiService)
 
-        val repository = Repository(apiRepository, dbRepository)
+        val repositoryImpl = RepositoryImpl(apiRepository, dbRepository)
 
-        val viewModelFactory = ViewModelFactory(repository)
+        val viewModelFactory = ViewModelFactory(repositoryImpl)
         ViewModelProvider(this, viewModelFactory)[UserDetailsViewModel::class.java]
     }
 

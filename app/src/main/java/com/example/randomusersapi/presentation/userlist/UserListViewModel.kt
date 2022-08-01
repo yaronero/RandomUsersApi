@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.randomusersapi.data.repository.Repository
+import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.domain.User
 import com.example.randomusersapi.utils.LOAD_AMOUNT
 import kotlinx.coroutines.launch
 
 class UserListViewModel(
-    private val repository: Repository
+    private val repository: RepositoryImpl
 ) : ViewModel() {
 
     private val _userList = MutableLiveData<List<User>>()
