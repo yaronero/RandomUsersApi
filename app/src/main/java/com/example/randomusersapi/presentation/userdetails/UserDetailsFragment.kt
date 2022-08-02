@@ -6,11 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
-import com.example.randomusersapi.presentation.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -19,12 +19,7 @@ class UserDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentUserDetailsBinding
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[UserDetailsViewModel::class.java]
-    }
+    private val viewModel: UserDetailsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,

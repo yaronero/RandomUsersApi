@@ -4,13 +4,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.randomusersapi.data.repository.RepositoryImpl
+import com.example.randomusersapi.domain.Repository
 import com.example.randomusersapi.domain.User
 import com.example.randomusersapi.utils.LOAD_AMOUNT
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class UserListViewModel(
-    private val repository: RepositoryImpl
+@HiltViewModel
+class UserListViewModel @Inject constructor(
+    private val repository: Repository
 ) : ViewModel() {
 
     private val _userList = MutableLiveData<List<User>>()

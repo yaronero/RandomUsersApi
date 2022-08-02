@@ -6,15 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import com.example.randomusersapi.R
 import com.example.randomusersapi.databinding.FragmentUserListBinding
 import com.example.randomusersapi.domain.User
-import com.example.randomusersapi.presentation.ViewModelFactory
 import com.example.randomusersapi.presentation.userdetails.UserDetailsFragment
 import com.example.randomusersapi.presentation.userlist.adapter.UserListAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class UserListFragment : Fragment() {
@@ -25,12 +24,7 @@ class UserListFragment : Fragment() {
         UserListAdapter(::onItemClickListener, ::loadUserData)
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[UserListViewModel::class.java]
-    }
+    private val viewModel: UserListViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
