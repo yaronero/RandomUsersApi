@@ -8,9 +8,8 @@ import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.domain.User
 import com.example.randomusersapi.utils.LOAD_AMOUNT
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class UserListViewModel @Inject constructor(
+class UserListViewModel(
     private val repository: RepositoryImpl
 ) : ViewModel() {
 

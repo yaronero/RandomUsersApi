@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class DBRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
-    private val mapper: UserMapper = UserMapper()
+    private val mapper: UserMapper
 ) : DBRepository {
 
     override suspend fun insertAllUsers(list: List<User>) {

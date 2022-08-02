@@ -8,11 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.randomusersapi.R
-import com.example.randomusersapi.data.api.ApiService
-import com.example.randomusersapi.data.db.UsersDatabase
-import com.example.randomusersapi.data.repository.ApiRepositoryImpl
-import com.example.randomusersapi.data.repository.DBRepositoryImpl
-import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.databinding.FragmentUserListBinding
 import com.example.randomusersapi.di.ApplicationModule
 import com.example.randomusersapi.di.DaggerAppComponent
@@ -25,19 +20,6 @@ import javax.inject.Inject
 class UserListFragment : Fragment() {
 
     private lateinit var binding: FragmentUserListBinding
-
-    /*private val viewModel by lazy {
-        val userDao = UsersDatabase.getInstance(activity?.application!!).userDao()
-        val dbRepository = DBRepositoryImpl(userDao)
-
-        val apiService = ApiService.getInstance()
-        val apiRepository = ApiRepositoryImpl(apiService)
-
-        val repositoryImpl = RepositoryImpl(apiRepository, dbRepository)
-
-        val viewModelFactory = ViewModelFactory(repositoryImpl)
-        ViewModelProvider(this, viewModelFactory)[UserListViewModel::class.java]
-    }*/
 
     private val adapter by lazy {
         UserListAdapter(::onItemClickListener, ::loadUserData)

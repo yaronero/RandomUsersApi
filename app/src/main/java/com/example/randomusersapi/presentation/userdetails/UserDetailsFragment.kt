@@ -9,29 +9,28 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
-import com.example.randomusersapi.data.api.ApiService
-import com.example.randomusersapi.data.db.UsersDatabase
-import com.example.randomusersapi.data.repository.ApiRepositoryImpl
-import com.example.randomusersapi.data.repository.DBRepositoryImpl
-import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
+import com.example.randomusersapi.di.ApplicationModule
+import com.example.randomusersapi.di.DaggerAppComponent
 import com.example.randomusersapi.presentation.ViewModelFactory
+import javax.inject.Inject
 
 class UserDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentUserDetailsBinding
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val viewModel by lazy {
-        val userDao = UsersDatabase.getInstance(activity?.application!!).userDao()
-        val dbRepository = DBRepositoryImpl(userDao)
-
-        val apiService = ApiService.getInstance()
-        val apiRepository = ApiRepositoryImpl(apiService)
-
-        val repositoryImpl = RepositoryImpl(apiRepository, dbRepository)
-
-        val viewModelFactory = ViewModelFactory(repositoryImpl)
         ViewModelProvider(this, viewModelFactory)[UserDetailsViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DaggerAppComponent.builder()
+            .applicationModule(ApplicationModule(requireActivity().application))
+            .build().inject(this)
     }
 
     override fun onCreateView(

@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class ApiRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
-    private val mapper: UserMapper = UserMapper()
+    private val mapper: UserMapper
 ) : ApiRepository {
 
     override suspend fun loadUserData(): List<User> {

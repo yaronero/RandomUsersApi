@@ -9,5 +9,5 @@ import dagger.Module
 interface DatabaseModule {
 
     @Binds
-    fun bindApiRepository(impl: DBRepositoryImpl): DBRepository
+    fun bindDatabaseRepository(impl: DBRepositoryImpl): DBRepository
 }
