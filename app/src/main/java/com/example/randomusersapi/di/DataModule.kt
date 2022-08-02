@@ -4,7 +4,6 @@ import androidx.room.Room
 import com.example.randomusersapi.data.UserMapper
 import com.example.randomusersapi.data.api.ApiService
 import com.example.randomusersapi.data.api.ApiService.Companion.BASE_URL
-import com.example.randomusersapi.data.db.UserDao
 import com.example.randomusersapi.data.db.UsersDatabase
 import com.example.randomusersapi.data.db.UsersDatabase.Companion.DATABASE_NAME
 import com.example.randomusersapi.data.repository.ApiRepositoryImpl
@@ -26,14 +25,14 @@ val dataModule = module {
             .build().create(ApiService::class.java)
     }
 
-    single<UserDao> {
+    single {
         Room.databaseBuilder(
             get(),
             UsersDatabase::class.java, DATABASE_NAME
         ).build().userDao()
     }
 
-    factory<UserMapper> {
+    factory {
         UserMapper()
     }
 

@@ -10,12 +10,17 @@ import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class UserDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentUserDetailsBinding
 
-    private val viewModel by viewModel<UserDetailsViewModel>()
+    private val viewModel: UserDetailsViewModel by viewModel {
+        parametersOf(
+            arguments?.getString(USER_UUID)!!
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,8 +34,7 @@ class UserDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val userUuid = arguments?.getString(USER_UUID)!!
-        viewModel.getUserByUuid(userUuid)
+        viewModel.getUserByUuid()
         setupUserObserver(view)
     }
 

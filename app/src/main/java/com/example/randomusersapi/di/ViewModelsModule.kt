@@ -11,7 +11,7 @@ val viewModelModule = module {
         UserListViewModel(get())
     }
 
-    viewModel {
-        UserDetailsViewModel(get())
+    viewModel { parameters ->
+        UserDetailsViewModel(get(), get())
     }
 }

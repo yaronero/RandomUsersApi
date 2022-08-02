@@ -9,14 +9,15 @@ import com.example.randomusersapi.domain.User
 import kotlinx.coroutines.launch
 
 class UserDetailsViewModel(
-    private val repository: Repository
+    private val repository: Repository,
+    private val uuid: String
 ) : ViewModel() {
 
     private val _userInfo = MutableLiveData<User>()
     val userInfo: LiveData<User>
         get() = _userInfo
 
-    fun getUserByUuid(uuid: String) {
+    fun getUserByUuid() {
         viewModelScope.launch {
             _userInfo.postValue(repository.getUserByUuid(uuid))
         }
