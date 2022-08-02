@@ -1,27 +1,45 @@
 package com.example.randomusersapi.presentation.userdetails
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.randomusersapi.domain.Repository
 import com.example.randomusersapi.domain.User
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class UserDetailsViewModel @Inject constructor(
-    private val repository: Repository
+//@HiltViewModel
+class UserDetailsViewModel @AssistedInject constructor(
+    private val repository: Repository,
+    @Assisted private val uuid: String
 ) : ViewModel() {
 
     private val _userInfo = MutableLiveData<User>()
     val userInfo: LiveData<User>
         get() = _userInfo
 
-    fun getUserByUuid(uuid: String) {
+    fun getUserDetails() {
         viewModelScope.launch {
             _userInfo.postValue(repository.getUserByUuid(uuid))
         }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    companion object {
+        fun provideFactory(
+            assistedFactory: Factory,
+            uuid: String
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(uuid) as T
+            }
+        }
+    }
+
+    @AssistedFactory
+    interface Factory{
+        fun create(uuid: String) : UserDetailsViewModel
     }
 }

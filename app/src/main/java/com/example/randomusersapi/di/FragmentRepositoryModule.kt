@@ -10,11 +10,10 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
-import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
-interface DataBindingsModule {
+@InstallIn(FragmentComponent::class)
+interface FragmentRepositoryModule {
 
     @Binds
     fun bindApiRepository(impl: ApiRepositoryImpl): ApiRepository
