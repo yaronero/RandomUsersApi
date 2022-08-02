@@ -13,7 +13,7 @@ import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(ViewModelComponent::class, FragmentComponent::class)
 interface DataBindingsModule {
 
     @Binds

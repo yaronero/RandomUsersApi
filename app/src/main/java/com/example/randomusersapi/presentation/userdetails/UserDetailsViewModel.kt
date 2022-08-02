@@ -6,11 +6,8 @@ import com.example.randomusersapi.domain.User
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-//@HiltViewModel
 class UserDetailsViewModel @AssistedInject constructor(
     private val repository: Repository,
     @Assisted private val uuid: String
@@ -39,7 +36,7 @@ class UserDetailsViewModel @AssistedInject constructor(
     }
 
     @AssistedFactory
-    interface Factory{
-        fun create(uuid: String) : UserDetailsViewModel
+    interface Factory {
+        fun create(uuid: String): UserDetailsViewModel
     }
 }

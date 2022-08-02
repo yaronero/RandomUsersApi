@@ -18,7 +18,9 @@ class UserDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentUserDetailsBinding
 
-    @Inject lateinit var factory: UserDetailsViewModel.Factory
+    @Inject
+    lateinit var factory: UserDetailsViewModel.Factory
+
     private val viewModel: UserDetailsViewModel by viewModels {
         UserDetailsViewModel.provideFactory(factory, arguments?.getString(USER_UUID)!!)
     }
