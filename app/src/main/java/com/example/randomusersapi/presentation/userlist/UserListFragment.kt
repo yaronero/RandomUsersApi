@@ -6,35 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.randomusersapi.R
-import com.example.randomusersapi.data.api.ApiService
-import com.example.randomusersapi.data.db.UsersDatabase
-import com.example.randomusersapi.data.repository.ApiRepositoryImpl
-import com.example.randomusersapi.data.repository.DBRepositoryImpl
-import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.databinding.FragmentUserListBinding
 import com.example.randomusersapi.domain.User
-import com.example.randomusersapi.presentation.ViewModelFactory
 import com.example.randomusersapi.presentation.userdetails.UserDetailsFragment
 import com.example.randomusersapi.presentation.userlist.adapter.UserListAdapter
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class UserListFragment : Fragment() {
 
     private lateinit var binding: FragmentUserListBinding
 
-    private val viewModel by lazy {
-        val userDao = UsersDatabase.getInstance(activity?.application!!).userDao()
-        val dbRepository = DBRepositoryImpl(userDao)
-
-        val apiService = ApiService.getInstance()
-        val apiRepository = ApiRepositoryImpl(apiService)
-
-        val repositoryImpl = RepositoryImpl(apiRepository, dbRepository)
-
-        val viewModelFactory = ViewModelFactory(repositoryImpl)
-        ViewModelProvider(this, viewModelFactory)[UserListViewModel::class.java]
-    }
+    private val viewModel by viewModel<UserListViewModel>()
 
     private val adapter by lazy {
         UserListAdapter(::onItemClickListener, ::loadUserData)
