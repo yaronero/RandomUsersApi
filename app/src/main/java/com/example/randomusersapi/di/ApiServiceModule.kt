@@ -12,10 +12,15 @@ class ApiServiceModule {
 
     @Singleton
     @Provides
-    fun provideApiService(): ApiService {
+    fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(ApiService.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
-            .build().create(ApiService::class.java)
+            .build()
+    }
+
+    @Provides
+    fun provideApiService(retrofit: Retrofit): ApiService {
+        return retrofit.create(ApiService::class.java)
     }
 }
