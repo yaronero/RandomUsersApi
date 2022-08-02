@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.randomusersapi.R
 import com.example.randomusersapi.databinding.ActivityMainBinding
 import com.example.randomusersapi.presentation.userlist.UserListFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val binding by lazy {

@@ -10,11 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.randomusersapi.R
 import com.example.randomusersapi.databinding.FragmentUserDetailsBinding
-import com.example.randomusersapi.di.ApplicationModule
-import com.example.randomusersapi.di.DaggerAppComponent
 import com.example.randomusersapi.presentation.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class UserDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentUserDetailsBinding
@@ -26,19 +26,11 @@ class UserDetailsFragment : Fragment() {
         ViewModelProvider(this, viewModelFactory)[UserDetailsViewModel::class.java]
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        DaggerAppComponent.builder()
-            .applicationModule(ApplicationModule(requireActivity().application))
-            .build().inject(this)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        retainInstance = true
         binding = FragmentUserDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
