@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.presentation.userdetails.UserDetailsViewModel
 import com.example.randomusersapi.presentation.userlist.UserListViewModel
+import javax.inject.Inject
 
-class ViewModelFactory(
+class ViewModelFactory @Inject constructor(
     private val repositoryImpl: RepositoryImpl
 ) : ViewModelProvider.Factory {
 

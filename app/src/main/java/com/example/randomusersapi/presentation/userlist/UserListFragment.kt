@@ -14,16 +14,19 @@ import com.example.randomusersapi.data.repository.ApiRepositoryImpl
 import com.example.randomusersapi.data.repository.DBRepositoryImpl
 import com.example.randomusersapi.data.repository.RepositoryImpl
 import com.example.randomusersapi.databinding.FragmentUserListBinding
+import com.example.randomusersapi.di.ApplicationModule
+import com.example.randomusersapi.di.DaggerAppComponent
 import com.example.randomusersapi.domain.User
 import com.example.randomusersapi.presentation.ViewModelFactory
 import com.example.randomusersapi.presentation.userdetails.UserDetailsFragment
 import com.example.randomusersapi.presentation.userlist.adapter.UserListAdapter
+import javax.inject.Inject
 
 class UserListFragment : Fragment() {
 
     private lateinit var binding: FragmentUserListBinding
 
-    private val viewModel by lazy {
+    /*private val viewModel by lazy {
         val userDao = UsersDatabase.getInstance(activity?.application!!).userDao()
         val dbRepository = DBRepositoryImpl(userDao)
 
@@ -34,10 +37,24 @@ class UserListFragment : Fragment() {
 
         val viewModelFactory = ViewModelFactory(repositoryImpl)
         ViewModelProvider(this, viewModelFactory)[UserListViewModel::class.java]
-    }
+    }*/
 
     private val adapter by lazy {
         UserListAdapter(::onItemClickListener, ::loadUserData)
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[UserListViewModel::class.java]
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        DaggerAppComponent.builder()
+            .applicationModule(ApplicationModule(requireActivity().application))
+            .build().inject(this)
     }
 
     override fun onCreateView(

@@ -4,8 +4,9 @@ import com.example.randomusersapi.data.UserMapper
 import com.example.randomusersapi.data.db.UserDao
 import com.example.randomusersapi.domain.DBRepository
 import com.example.randomusersapi.domain.User
+import javax.inject.Inject
 
-class DBRepositoryImpl(
+class DBRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
     private val mapper: UserMapper = UserMapper()
 ) : DBRepository {

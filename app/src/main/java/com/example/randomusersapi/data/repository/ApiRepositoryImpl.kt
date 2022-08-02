@@ -5,8 +5,9 @@ import com.example.randomusersapi.data.api.ApiService
 import com.example.randomusersapi.domain.ApiRepository
 import com.example.randomusersapi.domain.User
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class ApiRepositoryImpl(
+class ApiRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
     private val mapper: UserMapper = UserMapper()
 ) : ApiRepository {

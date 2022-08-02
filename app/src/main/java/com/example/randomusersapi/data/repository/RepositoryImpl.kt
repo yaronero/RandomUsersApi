@@ -4,8 +4,9 @@ import com.example.randomusersapi.domain.ApiRepository
 import com.example.randomusersapi.domain.DBRepository
 import com.example.randomusersapi.domain.Repository
 import com.example.randomusersapi.domain.User
+import javax.inject.Inject
 
-class RepositoryImpl(
+class RepositoryImpl @Inject constructor(
     private val apiRepository: ApiRepository,
     private val dbRepository: DBRepository,
 ) : Repository {
